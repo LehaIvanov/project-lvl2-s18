@@ -1,7 +1,7 @@
 install:
 	npm install
 start:
-	npm run babel-node -- 'src/bin/gendiff.js' -h
+	npm run babel-node -- 'src/bin/gendiff.js' ~/before.json ~/after.json
 publish:
 	npm publish
 lint:
@@ -9,3 +9,7 @@ lint:
 build:
 	rm -rf dist
 	npm run build
+test:
+	npm test
+test-watch:
+	npm test -- --watch
