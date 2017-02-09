@@ -1,6 +1,7 @@
 import _ from 'lodash';
+import fs from 'fs';
 
-const gendiff = (before, after) => {
+const gendiffObj = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
   const getLine = (key) => {
     if (after[key] === before[key]) {
@@ -15,6 +16,13 @@ const gendiff = (before, after) => {
   const lines = keys.reduce((acc, key) => `${acc}${getLine(key)}`, '');
 
   return `{\n${lines}}`;
+};
+
+const gendiff = (path1, path2) => {
+  const obj1 = JSON.parse(fs.readFileSync(path1, 'utf8'));
+  const obj2 = JSON.parse(fs.readFileSync(path2, 'utf8'));
+
+  return gendiffObj(obj1, obj2);
 };
 
 export default gendiff;
