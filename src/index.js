@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import yaml from 'js-yaml';
+import ini from 'ini';
 
 const gendiffObj = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
@@ -29,6 +30,13 @@ export const gendiffJson = (path1, path2) => {
 export const gendiffYaml = (path1, path2) => {
   const obj1 = yaml.safeLoad(fs.readFileSync(path1, 'utf8'));
   const obj2 = yaml.safeLoad(fs.readFileSync(path2, 'utf8'));
+
+  return gendiffObj(obj1, obj2);
+};
+
+export const gendiffIni = (path1, path2) => {
+  const obj1 = ini.parse(fs.readFileSync(path1, 'utf8'));
+  const obj2 = ini.parse(fs.readFileSync(path2, 'utf8'));
 
   return gendiffObj(obj1, obj2);
 };

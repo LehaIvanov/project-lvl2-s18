@@ -1,6 +1,6 @@
 {
   "name": "gendiff-lvl2-s18-ai",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -34,7 +34,8 @@
   "dependencies": {
     "commander": "*",
     "lodash": "*",
-    "js-yaml": "*"
+    "js-yaml": "*",
+    "ini": "*"
   },
   "bin": {
     "gendiff": "dist/bin/gendiff.js"

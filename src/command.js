@@ -1,10 +1,12 @@
 import program from 'commander';
 import pjson from '../package.json';
-import { gendiffJson, gendiffYaml } from './';
+import { gendiffJson, gendiffYaml, gendiffIni } from './';
 
 const isJson = path => path.endsWith('.json');
 
 const isYaml = path => path.endsWith('.yaml') || path.endsWith('.yml');
+
+const isIni = path => path.endsWith('.ini');
 
 const createCommand = () => program
   .version(pjson.version)
@@ -16,9 +18,8 @@ const createCommand = () => program
       console.log(gendiffJson(path1, path2));
     } else if (isYaml(path1) && isYaml(path2)) {
       console.log(gendiffYaml(path1, path2));
-    } else if ((isYaml(path1) && isJson(path2)) || (isJson(path1) && isYaml(path2))) {
-      console.error('Different extension of files');
-      process.exit(1);
+    } else if (isIni(path1) && isIni(path2)) {
+      console.log(gendiffIni(path1, path2));
     } else {
       console.error('Unexpected extension of files');
       process.exit(1);
