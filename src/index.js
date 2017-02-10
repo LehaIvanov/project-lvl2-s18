@@ -1,8 +1,5 @@
 import _ from 'lodash';
-import fs from 'fs';
-import yaml from 'js-yaml';
-import ini from 'ini';
-import path from 'path';
+import parseObj from './parser';
 
 const gendiffObj = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
@@ -21,30 +18,9 @@ const gendiffObj = (before, after) => {
   return `{\n${lines}}`;
 };
 
-const getObj = (pathToFile) => {
-  const extname = path.extname(pathToFile);
-  const content = fs.readFileSync(pathToFile, 'utf8');
-
-  switch (extname) {
-    case '.json': {
-      return JSON.parse(content);
-    }
-    case '.yaml':
-    case '.yml': {
-      return yaml.safeLoad(content);
-    }
-    case '.ini': {
-      return ini.parse(content);
-    }
-    default: {
-      return null;
-    }
-  }
-};
-
 const gendiff = (path1, path2) => {
-  const obj1 = getObj(path1);
-  const obj2 = getObj(path2);
+  const obj1 = parseObj(path1);
+  const obj2 = parseObj(path2);
 
   if (obj1 && obj2) {
     return gendiffObj(obj1, obj2);
