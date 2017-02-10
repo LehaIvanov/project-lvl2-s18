@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import runCommand from '../command';
+import createCommand from '../command';
 
-runCommand(process.argv);
+createCommand().parse(process.argv);

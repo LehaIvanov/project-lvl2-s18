@@ -2,6 +2,7 @@ import _ from 'lodash';
 import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
+import path from 'path';
 
 const gendiffObj = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
@@ -20,23 +21,36 @@ const gendiffObj = (before, after) => {
   return `{\n${lines}}`;
 };
 
-export const gendiffJson = (path1, path2) => {
-  const obj1 = JSON.parse(fs.readFileSync(path1, 'utf8'));
-  const obj2 = JSON.parse(fs.readFileSync(path2, 'utf8'));
+const getObj = (pathToFile) => {
+  const extname = path.extname(pathToFile);
+  const content = fs.readFileSync(pathToFile, 'utf8');
 
-  return gendiffObj(obj1, obj2);
+  switch (extname) {
+    case '.json': {
+      return JSON.parse(content);
+    }
+    case '.yaml':
+    case '.yml': {
+      return yaml.safeLoad(content);
+    }
+    case '.ini': {
+      return ini.parse(content);
+    }
+    default: {
+      return null;
+    }
+  }
 };
 
-export const gendiffYaml = (path1, path2) => {
-  const obj1 = yaml.safeLoad(fs.readFileSync(path1, 'utf8'));
-  const obj2 = yaml.safeLoad(fs.readFileSync(path2, 'utf8'));
+const gendiff = (path1, path2) => {
+  const obj1 = getObj(path1);
+  const obj2 = getObj(path2);
 
-  return gendiffObj(obj1, obj2);
+  if (obj1 && obj2) {
+    return gendiffObj(obj1, obj2);
+  }
+
+  return 'Unexpected extension of files';
 };
 
-export const gendiffIni = (path1, path2) => {
-  const obj1 = ini.parse(fs.readFileSync(path1, 'utf8'));
-  const obj2 = ini.parse(fs.readFileSync(path2, 'utf8'));
-
-  return gendiffObj(obj1, obj2);
-};
+export default gendiff;

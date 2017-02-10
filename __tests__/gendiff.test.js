@@ -1,6 +1,6 @@
-import { gendiffJson, gendiffYaml, gendiffIni } from '../src/';
+import gendiff from '../src/';
 
-test('gendiffJson', () => {
+test('gendiff json', () => {
   const path1 = './__tests__/resources/before.json';
   const path2 = './__tests__/resources/after.json';
   const expected = ['{\n',
@@ -12,10 +12,10 @@ test('gendiffJson', () => {
     '}',
   ].join('');
 
-  expect(gendiffJson(path1, path2)).toEqual(expected);
+  expect(gendiff(path1, path2)).toEqual(expected);
 });
 
-test('gendiffYaml', () => {
+test('gendiff yaml', () => {
   const path1 = './__tests__/resources/before.yml';
   const path2 = './__tests__/resources/after.yml';
   const expected = ['{\n',
@@ -27,10 +27,10 @@ test('gendiffYaml', () => {
     '}',
   ].join('');
 
-  expect(gendiffYaml(path1, path2)).toEqual(expected);
+  expect(gendiff(path1, path2)).toEqual(expected);
 });
 
-test('gendiffIni', () => {
+test('gendiff ini', () => {
   const path1 = './__tests__/resources/before.ini';
   const path2 = './__tests__/resources/after.ini';
   const expected = ['{\n',
@@ -42,5 +42,5 @@ test('gendiffIni', () => {
     '}',
   ].join('');
 
-  expect(gendiffIni(path1, path2)).toEqual(expected);
+  expect(gendiff(path1, path2)).toEqual(expected);
 });
