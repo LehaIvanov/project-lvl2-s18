@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import parseObj from './parser';
+import { makeTree, printTree } from './tree';
 
 const gendiffObj = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
@@ -23,7 +24,8 @@ const gendiff = (path1, path2) => {
   const obj2 = parseObj(path2);
 
   if (obj1 && obj2) {
-    return gendiffObj(obj1, obj2);
+    const tree = makeTree(obj1, obj2);
+    return printTree(tree);
   }
 
   return 'Unexpected extension of files';
