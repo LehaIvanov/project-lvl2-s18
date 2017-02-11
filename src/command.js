@@ -7,8 +7,8 @@ const createCommand = () => program
   .arguments('<first_config> <second_config>')
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
-  .action((path1, path2) => {
-    console.log(gendiff(path1, path2));
+  .action((path1, path2, options) => {
+    console.log(gendiff(path1, path2, options.format));
   });
 
 export default createCommand;

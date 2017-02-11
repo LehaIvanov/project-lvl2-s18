@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import parseObj from './parser';
-import { makeTree, treeToString } from './tree';
+import buildTree from './buildTree';
 
 const getObj = (pathToFile) => {
   const extname = path.extname(pathToFile);
@@ -10,13 +10,13 @@ const getObj = (pathToFile) => {
   return parseObj(content, extname);
 };
 
-const gendiff = (path1, path2) => {
+const gendiff = (path1, path2, format = 'default') => {
   const obj1 = getObj(path1);
   const obj2 = getObj(path2);
 
   if (obj1 && obj2) {
-    const tree = makeTree(obj1, obj2);
-    return treeToString(tree);
+    const tree = buildTree(obj1, obj2, format);
+    return tree.toString();
   }
 
   return 'Unexpected extension of files';

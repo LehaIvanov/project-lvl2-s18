@@ -3,75 +3,48 @@ import gendiff from '../src/';
 
 const resourcesPath = './__tests__/resources';
 const fixturesPath = './__tests__/resources/fixtures';
+const extnameList = ['ini', 'json', 'yml'];
 
-test('gendiff flat json', () => {
-  const path1 = `${resourcesPath}/before.json`;
-  const path2 = `${resourcesPath}/after.json`;
-  const expected = ['{\n',
-    '    host: hexlet.io\n',
-    '  + timeout: 20\n',
-    '  - timeout: 50\n',
-    '  - proxy: 123.234.53.22\n',
-    '  + verbose: true\n',
-    '}',
-  ].join('');
+describe('gendiff for flat structure', () => {
+  extnameList.forEach((extname) => {
+    test(`*.${extname}`, () => {
+      const path1 = `${resourcesPath}/before.${extname}`;
+      const path2 = `${resourcesPath}/after.${extname}`;
+      const expected = ['{\n',
+        '    host: hexlet.io\n',
+        '  + timeout: 20\n',
+        '  - timeout: 50\n',
+        '  - proxy: 123.234.53.22\n',
+        '  + verbose: true\n',
+        '}',
+      ].join('');
 
-  expect(gendiff(path1, path2)).toEqual(expected);
+      expect(gendiff(path1, path2)).toEqual(expected);
+    });
+  });
 });
 
-test('gendiff flat yaml', () => {
-  const path1 = `${resourcesPath}/before.yml`;
-  const path2 = `${resourcesPath}/after.yml`;
-  const expected = ['{\n',
-    '    host: hexlet.io\n',
-    '  + timeout: 20\n',
-    '  - timeout: 50\n',
-    '  - proxy: 123.234.53.22\n',
-    '  + verbose: true\n',
-    '}',
-  ].join('');
+describe('gendiff for nested structure', () => {
+  extnameList.forEach((extname) => {
+    test(`*.${extname}`, () => {
+      const path1 = `${resourcesPath}/nested/before.${extname}`;
+      const path2 = `${resourcesPath}/nested/after.${extname}`;
+      const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
 
-  expect(gendiff(path1, path2)).toEqual(expected);
+      expect(gendiff(path1, path2)).toEqual(expected);
+    });
+  });
 });
 
-test('gendiff flat ini', () => {
-  const path1 = `${resourcesPath}/before.ini`;
-  const path2 = `${resourcesPath}/after.ini`;
-  const expected = ['{\n',
-    '    host: hexlet.io\n',
-    '  + timeout: 20\n',
-    '  - timeout: 50\n',
-    '  - proxy: 123.234.53.22\n',
-    '  + verbose: true\n',
-    '}',
-  ].join('');
+describe('gendiff with plain format', () => {
+  extnameList.forEach((extname) => {
+    test(`*.${extname}`, () => {
+      const path1 = `${resourcesPath}/nested/before.${extname}`;
+      const path2 = `${resourcesPath}/nested/after.${extname}`;
+      const expected = fs.readFileSync(`${fixturesPath}/expected-plain-format.txt`, 'utf8');
+      const result = gendiff(path1, path2, 'plain');
 
-  expect(gendiff(path1, path2)).toEqual(expected);
-});
-
-test('gendiff nested json', () => {
-  const path1 = `${resourcesPath}/nested/before.json`;
-  const path2 = `${resourcesPath}/nested/after.json`;
-  const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
-  const result = gendiff(path1, path2);
-
-  expect(result).toEqual(expected);
-});
-
-test('gendiff nested yaml', () => {
-  const path1 = `${resourcesPath}/nested/before.yml`;
-  const path2 = `${resourcesPath}/nested/after.yml`;
-  const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
-  const result = gendiff(path1, path2);
-
-  expect(result).toEqual(expected);
-});
-
-test('gendiff nested ini', () => {
-  const path1 = `${resourcesPath}/nested/before.ini`;
-  const path2 = `${resourcesPath}/nested/after.ini`;
-  const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
-  const result = gendiff(path1, path2);
-
-  expect(result).toEqual(expected);
+      expect(result).toEqual(expected);
+    });
+  });
 });
