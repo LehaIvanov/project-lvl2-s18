@@ -50,8 +50,26 @@ test('gendiff flat ini', () => {
 });
 
 test('gendiff nested json', () => {
-  const path1 = `${resourcesPath}/before-nested.json`;
-  const path2 = `${resourcesPath}/after-nested.json`;
+  const path1 = `${resourcesPath}/nested/before.json`;
+  const path2 = `${resourcesPath}/nested/after.json`;
+  const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
+  const result = gendiff(path1, path2);
+
+  expect(result).toEqual(expected);
+});
+
+test('gendiff nested yaml', () => {
+  const path1 = `${resourcesPath}/nested/before.yml`;
+  const path2 = `${resourcesPath}/nested/after.yml`;
+  const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
+  const result = gendiff(path1, path2);
+
+  expect(result).toEqual(expected);
+});
+
+test('gendiff nested ini', () => {
+  const path1 = `${resourcesPath}/nested/before.ini`;
+  const path2 = `${resourcesPath}/nested/after.ini`;
   const expected = fs.readFileSync(`${fixturesPath}/expected-nested.txt`, 'utf8');
   const result = gendiff(path1, path2);
 

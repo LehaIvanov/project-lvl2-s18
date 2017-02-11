@@ -2,12 +2,15 @@ import _ from 'lodash';
 
 const isObject = value => value instanceof Object;
 
+const isUndefined = value => typeof value === 'undefined';
+
 export const makeTree = (before, after) => {
   const keys = _.union(Object.keys(before), Object.keys(after));
 
   return keys.map((key) => {
     if (isObject(before[key]) && isObject(after[key])) {
       return {
+        type: 'unchanged',
         key,
         oldValue: before[key],
         newValue: after[key],
@@ -15,8 +18,27 @@ export const makeTree = (before, after) => {
       };
     }
 
+    if (isUndefined(before[key])) {
+      return {
+        type: 'new',
+        key,
+        newValue: after[key],
+        childs: null,
+      };
+    }
+
+    if (isUndefined(after[key])) {
+      return {
+        type: 'deleted',
+        key,
+        oldValue: before[key],
+        childs: null,
+      };
+    }
+
     return {
       key,
+      type: before[key] === after[key] ? 'unchanged' : 'changed',
       oldValue: before[key],
       newValue: after[key],
       childs: null,
@@ -24,41 +46,58 @@ export const makeTree = (before, after) => {
   });
 };
 
-const getMarginLeft = depthValue => ' '.repeat(depthValue);
+const getMarginLeftStr = depthValue => '    '.repeat(depthValue);
 
-/*
-if (after[key] === before[key]) {
-      return `    ${key}: ${before[key]}\n`;
-    } else if (typeof after[key] === 'undefined') {
-      return `  - ${key}: ${before[key]}\n`;
-    } else if (typeof before[key] === 'undefined') {
-      return `  + ${key}: ${after[key]}\n`;
+const nodeValueObjectToString = (valueObj, depth) => {
+  const marginLeftStr = getMarginLeftStr(depth);
+  const str = Object.keys(valueObj).reduce((acc, key) => {
+    if (isObject(valueObj[key])) {
+      return `${acc}${marginLeftStr}    ${key}: ` +
+        `${nodeValueObjectToString(valueObj[key], depth + 1)}\n`;
     }
-    return `  + ${key}: ${after[key]}\n  - ${key}: ${before[key]}\n`;
-*/
 
-export const printTree = (tree) => {
-  const iter = (t, depth) => {
-    const getLine = (n) => {
-      if (n.childs) {
-        return `${iter(n.childs, depth + 1)}`;
-      }
+    return `${acc}${marginLeftStr}    ${key}: ${valueObj[key]}\n`;
+  }, '{\n');
 
-      if (n.newValue === n.oldValue) {
-        return `    ${n.key}: ${n.oldValue}\n`;
-      } else if (typeof n.newValue === 'undefined') {
-        return `  - ${n.key}: ${n.oldValue}\n`;
-      } else if (typeof n.oldValue === 'undefined') {
-        return `  + ${n.key}: ${n.newValue}\n`;
-      }
+  return `${str}${marginLeftStr}}`;
+};
 
-      return `  + ${n.key}: ${n.newValue}\n  - ${n.key}: ${n.oldValue}\n`;
-    };
+const treeToStringIter = (tree, depth) => {
+  const marginLeftStr = getMarginLeftStr(depth);
 
-    const lines = t.reduce((acc, node) => `${acc}${getLine(node)}`, '');
+  const nodeToString = (node) => {
+    if (node.childs) {
+      return `${marginLeftStr}    ${node.key}: ${treeToStringIter(node.childs, depth + 1)}\n`;
+    }
 
-    return `{\n${lines}}`;
+    const newValue = isObject(node.newValue)
+      ? nodeValueObjectToString(node.newValue, depth + 1) : node.newValue;
+    const oldValue = isObject(node.oldValue)
+      ? nodeValueObjectToString(node.oldValue, depth + 1) : node.oldValue;
+
+    if (node.type === 'changed') {
+      return `${marginLeftStr}  + ${node.key}: ${newValue}\n` +
+        `${marginLeftStr}  - ${node.key}: ${oldValue}\n`;
+    }
+
+    if (node.type === 'unchanged') {
+      return `${marginLeftStr}    ${node.key}: ${oldValue}\n`;
+    }
+
+    if (node.type === 'new') {
+      return `${marginLeftStr}  + ${node.key}: ${newValue}\n`;
+    }
+
+    if (node.type === 'deleted') {
+      return `${marginLeftStr}  - ${node.key}: ${oldValue}\n`;
+    }
+
+    return '';
   };
 
-  return iter(tree, 0);
+  const lines = tree.reduce((acc, currNode) => `${acc}${nodeToString(currNode)}`, '');
+
+  return `{\n${lines}${marginLeftStr}}`;
 };
+
+export const treeToString = tree => treeToStringIter(tree, 0);
