@@ -1,12 +1,7 @@
-import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
-import path from 'path';
 
-const parseObjFromFile = (pathToFile) => {
-  const extname = path.extname(pathToFile);
-  const content = fs.readFileSync(pathToFile, 'utf8');
-
+const parseObjFromFile = (content, extname) => {
   switch (extname) {
     case '.json': {
       return JSON.parse(content);
