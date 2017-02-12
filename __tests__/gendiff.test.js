@@ -54,7 +54,7 @@ describe('gendiff with json format', () => {
     test(`*.${extname}`, () => {
       const path1 = `${resourcesPath}/nested/before.${extname}`;
       const path2 = `${resourcesPath}/nested/after.${extname}`;
-      const expected = fs.readFileSync(`${fixturesPath}/expected-json-format.txt`, 'utf8');
+      const expected = fs.readFileSync(`${fixturesPath}/expected-json-format.json`, 'utf8');
       const result = gendiff(path1, path2, 'json');
 
       expect(result).toEqual(expected);
