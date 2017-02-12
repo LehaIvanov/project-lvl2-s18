@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import parseObj from './parser';
-import buildTree from './buildTree';
+import getGendiffStrategy from './gendiffStrategy';
 
 const getObj = (pathToFile) => {
   const extname = path.extname(pathToFile);
@@ -15,8 +15,8 @@ const gendiff = (path1, path2, format = 'default') => {
   const obj2 = getObj(path2);
 
   if (obj1 && obj2) {
-    const tree = buildTree(obj1, obj2, format);
-    return tree.toString();
+    const generatorFunc = getGendiffStrategy(format);
+    return generatorFunc(obj1, obj2);
   }
 
   return 'Unexpected extension of files';
