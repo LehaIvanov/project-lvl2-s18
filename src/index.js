@@ -17,7 +17,8 @@ const gendiff = (path1, path2, format = 'default') => {
 
   if (obj1 && obj2) {
     const generatorFunc = getGendiffStrategy(format);
-    return generatorFunc(makeTree(obj1, obj2));
+    const tree = makeTree(obj1, obj2);
+    return generatorFunc(tree);
   }
 
   return 'Unexpected extension of files';
