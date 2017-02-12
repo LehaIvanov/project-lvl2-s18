@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import makeTree from './tree';
 
 const getMarginLeftStr = depthValue => '    '.repeat(depthValue);
 
@@ -55,10 +54,6 @@ const treeToString = (tree, depth) => {
   return `{\n${lines}${marginLeftStr}}`;
 };
 
-const gendiffDefault = (before, after) => {
-  const tree = makeTree(before, after);
-
-  return treeToString(tree, 0);
-};
+const gendiffDefault = tree => treeToString(tree, 0);
 
 export default gendiffDefault;

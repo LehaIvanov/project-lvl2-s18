@@ -1,5 +1,3 @@
-import makeTree from './tree';
-
 const treeToObj = (tree) => {
   const nodeToObj = node => ({
     type: node.type,
@@ -14,10 +12,6 @@ const treeToObj = (tree) => {
 
 const treeToString = tree => JSON.stringify(treeToObj(tree), null, 2);
 
-const gendiffJson = (before, after) => {
-  const tree = makeTree(before, after);
-
-  return treeToString(tree);
-};
+const gendiffJson = tree => treeToString(tree);
 
 export default gendiffJson;

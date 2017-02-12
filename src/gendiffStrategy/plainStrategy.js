@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import makeTree from './tree';
 
 const nodeValueToString = (value) => {
   if (_.isObject(value)) {
@@ -44,10 +43,6 @@ const treeToString = (tree, parents) => {
   return tree.reduce((acc, currNode) => `${acc}${nodeToString(currNode)}`, '');
 };
 
-const gendiffPlain = (before, after) => {
-  const tree = makeTree(before, after);
-
-  return treeToString(tree, '');
-};
+const gendiffPlain = tree => treeToString(tree, '');
 
 export default gendiffPlain;
