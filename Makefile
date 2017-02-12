@@ -1,7 +1,7 @@
 install:
 	npm install
 start:
-	npm run babel-node -- 'src/bin/gendiff.js' -f plain ~/hexlet-lvl2-resources/before.json ~/hexlet-lvl2-resources/after.json
+	npm run babel-node -- 'src/bin/gendiff.js' -f plain __tests__/resources/nested/before.json __tests__/resources/nested/after.json
 publish:
 	npm publish
 lint:

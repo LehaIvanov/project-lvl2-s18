@@ -11,8 +11,6 @@ class DefaultTree {
           return {
             type: 'unchanged',
             key,
-            oldValue: before[key],
-            newValue: after[key],
             childs: makeNodes(before[key], after[key]),
           };
         }
@@ -22,7 +20,6 @@ class DefaultTree {
             type: 'new',
             key,
             newValue: after[key],
-            childs: null,
           };
         }
 
@@ -31,16 +28,14 @@ class DefaultTree {
             type: 'deleted',
             key,
             oldValue: before[key],
-            childs: null,
           };
         }
 
         return {
-          key,
           type: before[key] === after[key] ? 'unchanged' : 'changed',
+          key,
           oldValue: before[key],
           newValue: after[key],
-          childs: null,
         };
       });
     };
